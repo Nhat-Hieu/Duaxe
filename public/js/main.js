@@ -3,36 +3,37 @@ document.addEventListener('DOMContentLoaded', function () {
     const resetButton = document.querySelector('.reset-button');
     const circles = document.querySelectorAll('.circle');
     const carImages = document.querySelectorAll('.anhxe');
+    const finishLine = document.querySelector('.vachdich');
+
+    let gameStarted = false; // Biến để kiểm tra trạng thái bắt đầu của trò chơi
 
     startButton.addEventListener('click', function () {
-        // Xử lý sự kiện khi nút "Bắt đầu" được nhấn
+        if (!gameStarted) {
+            resetGame();
 
-        // Thêm lớp màu xanh cho hình tròn thứ 1
-        addCircleClass(circles[0], 'red');
+            // Bắt đầu trò chơi
+            gameStarted = true;
 
-        // Đặt timeout để thêm lớp màu vàng cho hình tròn thứ 2 sau 3 giây
-        setTimeout(function () {
-            addCircleClass(circles[1], 'yellow');
-        }, 3000);
+            // Thêm lớp màu xanh cho hình tròn thứ 1
+            addCircleClass(circles[0], 'red');
 
-        // Đặt timeout để thêm lớp màu đỏ cho hình tròn thứ 3 sau 6 giây
-        setTimeout(function () {
-            addCircleClass(circles[2], 'green');
-        }, 6000);
+            // Đặt timeout để thêm lớp màu vàng cho hình tròn thứ 2 sau 3 giây
+            setTimeout(function () {
+                addCircleClass(circles[1], 'yellow');
+            }, 1000);
 
-        // Thực hiện chuyển động cho hình ảnh xe đầu tiên
-        moveCar(carImages[0]);
+            // Đặt timeout để thêm lớp màu đỏ cho hình tròn thứ 3 sau 6 giây
+            setTimeout(function () {
+                addCircleClass(circles[2], 'green');
+
+                // Khi đèn xanh, cho các xe chạy với tốc độ ngẫu nhiên
+                moveCarRandomSpeed(carImages[0], finishLine.offsetLeft);
+                moveCarRandomSpeed(carImages[1], finishLine.offsetLeft);
+            }, 2000);
+        }
     });
 
     resetButton.addEventListener('click', function () {
-        // Xử lý sự kiện khi nút "Bắt đầu lại" được nhấn
-
-        // Loại bỏ lớp màu cho tất cả các hình tròn
-        circles.forEach(function (circle) {
-            circle.classList.remove('red', 'yellow', 'green');
-        });
-
-        // Đặt lại trạng thái trò chơi
         resetGame();
     });
 
@@ -46,13 +47,31 @@ document.addEventListener('DOMContentLoaded', function () {
         circle.classList.remove(className);
     }
 
-    // Hàm thực hiện chuyển động cho hình ảnh xe
-    function moveCar(car) {
-        // Thực hiện chuyển động cho hình ảnh xe
+    // Hàm thực hiện chuyển động cho hình ảnh xe về đích với tốc độ ngẫu nhiên
+    function moveCarRandomSpeed(car, finishLinePosition) {
+        const animationDuration = 4 + Math.random() * 6; // Tạo một thời gian ngẫu nhiên trong khoảng 4 đến 10 giây
+
+        car.style.animation = `moveCarAnimation ${animationDuration}s linear infinite`;
+        car.style.animationPlayState = 'running';
+
+        const keyframes = `@keyframes moveCarAnimation {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(${finishLinePosition - car.offsetLeft}px);
+            }
+        }`;
+
+        // Tạo một <style> element và thêm keyframes vào đó
+        const styleElement = document.createElement('style');
+        styleElement.innerHTML = keyframes;
+        document.head.appendChild(styleElement);
     }
 
     // Hàm đặt lại trạng thái trò chơi
     function resetGame() {
-        // Đặt lại trạng thái trò chơi
+        gameStarted = false;
+        carImages.forEach(car => car.style.animation = 'none');
     }
 });

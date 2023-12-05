@@ -72,13 +72,26 @@ p {
     display: flex;
 }
 
-.anhxe{
-    margin: 20px    ;
-    animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) infinite;
+@keyframes moveCarAnimation {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(80%); /* Điều chỉnh giá trị tùy thuộc vào kích thước và vị trí của đường đua */
+    }
+}
+
+
+
+.anhxe {
+    margin: 20px;
+    animation: shake 0.82s cubic-bezier(.36, .07, .19, .97) infinite,
+               moveCarAnimation 4s linear infinite; /* Thời gian và kiểu chuyển động có thể được điều chỉnh */
     transform: translate3d(0, 0, 0);
     backface-visibility: hidden;
     perspective: 1000px;
 }
+
 
 @keyframes shake {
     10%, 90% {
